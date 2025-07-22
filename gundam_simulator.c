@@ -490,6 +490,40 @@ int get_valid_integer(int min, int max) {
     }
 }
 
+void display_program_info() {
+    printf("\n=== ABOUT THIS PROGRAM ===\n");
+    printf("Gundam Mobile Suit Database & Battle Simulator v1.0\n");
+    printf("A comprehensive C programming demonstration project\n\n");
+
+    printf("🎯 Computer Science Concepts Demonstrated:\n");
+    printf("• Custom data structures and typedef usage\n");
+    printf("• Dynamic array management and bounds checking\n");
+    printf("• String manipulation and case-insensitive searching\n");
+    printf("• Menu-driven user interface design\n");
+    printf("• Input validation and error handling\n");
+    printf("• Mathematical calculations and algorithms\n");
+    printf("• Modular programming with header files\n");
+    printf("• Memory management best practices\n");
+    printf("• Random number generation for simulation\n");
+    printf("• Statistical analysis and data aggregation\n\n");
+    
+    printf("🔧 Technical Features:\n");
+    printf("• Robust input validation preventing buffer overflows\n");
+    printf("• Case-insensitive search across multiple fields\n");
+    printf("• Weighted battle power calculation system\n");
+    printf("• Real-time battle simulation with randomization\n");
+    printf("• Faction-based statistical analysis\n");
+    printf("• Damage system with repair mechanics\n\n");
+    
+    printf("📁 Project Structure:\n");
+    printf("• gundam_simulator.h - Header with declarations\n");
+    printf("• gundam_simulator.c - Implementation file\n");
+    printf("• Clean separation of interface and implementation\n\n");
+    
+    printf("Press Enter to continue...\n");
+    getchar();
+}
+
 int main() {
     mobile_suit suits[MAX_SUITS];
     int suit_count = 0;
