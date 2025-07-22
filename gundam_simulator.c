@@ -200,7 +200,6 @@ void search_suits(mobile_suit suits[], int count) {
     int found = 0;
     
     printf("\nEnter search term (name, pilot, or faction): ");
-    clear_input_buffer();
     fgets(search_term, sizeof(search_term), stdin);
     search_term[strcspn(search_term, "\n")] = 0; // Remove newline
     
@@ -247,7 +246,6 @@ void add_custom_suit(mobile_suit suits[], int *count) {
     mobile_suit *new_suit = &suits[*count];
     
     printf("Enter Mobile Suit name: ");
-    clear_input_buffer();
     fgets(new_suit->name, sizeof(new_suit->name), stdin);
     new_suit->name[strcspn(new_suit->name, "\n")] = 0;
     
@@ -276,7 +274,6 @@ void add_custom_suit(mobile_suit suits[], int *count) {
     
     for (int i = 0; i < new_suit->weapon_count; i++) {
         printf("Enter weapon %d: ", i + 1);
-        clear_input_buffer();
         fgets(new_suit->weapons[i], sizeof(new_suit->weapons[i]), stdin);
         new_suit->weapons[i][strcspn(new_suit->weapons[i], "\n")] = 0;
     }
@@ -488,6 +485,40 @@ int get_valid_integer(int min, int max) {
             clear_input_buffer();
         }
     }
+}
+
+void display_program_info() {
+    printf("\n=== ABOUT THIS PROGRAM ===\n");
+    printf("Gundam Mobile Suit Database & Battle Simulator v1.0\n");
+    printf("A comprehensive C programming demonstration project\n\n");
+
+    printf("🎯 Computer Science Concepts Demonstrated:\n");
+    printf("• Custom data structures and typedef usage\n");
+    printf("• Dynamic array management and bounds checking\n");
+    printf("• String manipulation and case-insensitive searching\n");
+    printf("• Menu-driven user interface design\n");
+    printf("• Input validation and error handling\n");
+    printf("• Mathematical calculations and algorithms\n");
+    printf("• Modular programming with header files\n");
+    printf("• Memory management best practices\n");
+    printf("• Random number generation for simulation\n");
+    printf("• Statistical analysis and data aggregation\n\n");
+    
+    printf("🔧 Technical Features:\n");
+    printf("• Robust input validation preventing buffer overflows\n");
+    printf("• Case-insensitive search across multiple fields\n");
+    printf("• Weighted battle power calculation system\n");
+    printf("• Real-time battle simulation with randomization\n");
+    printf("• Faction-based statistical analysis\n");
+    printf("• Damage system with repair mechanics\n\n");
+    
+    printf("📁 Project Structure:\n");
+    printf("• gundam_simulator.h - Header with declarations\n");
+    printf("• gundam_simulator.c - Implementation file\n");
+    printf("• Clean separation of interface and implementation\n\n");
+    
+    printf("Press Enter to continue...\n");
+    getchar();
 }
 
 int main() {
