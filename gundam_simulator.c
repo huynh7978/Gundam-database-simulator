@@ -4,57 +4,6 @@
  */
 #include "gundam_simulator.h"
 
-int main() {
-    mobile_suit suits[MAX_SUITS];
-    int suit_count = 0;
-    int choice;
-    
-    printf("==================================================\n");
-    printf("    GUNDAM MOBILE SUIT DATABASE & SIMULATOR\n");
-    printf("==================================================\n");
-    printf("Welcome to the Universal Century Database!\n\n");
-    
-    // Initialize with pre-loaded Gundam data
-    initialize_database(suits);
-    suit_count = 10; // Number of pre-loaded suits
-    
-    srand(time(NULL)); // Seed for random number generation
-    
-    while (1) {
-        display_menu();
-        choice = get_valid_integer(1, 8);
-        
-        switch (choice) {
-            case 1:
-                display_all_suits(suits, suit_count);
-                break;
-            case 2:
-                search_suits(suits, suit_count);
-                break;
-            case 3:
-                add_custom_suit(suits, &suit_count);
-                break;
-            case 4:
-                battle_simulation(suits, suit_count);
-                break;
-            case 5:
-                repair_suits(suits, suit_count);
-                break;
-            case 6:
-                display_faction_stats(suits, suit_count);
-                break;
-            case 7:
-                printf("\nThanks for using the Gundam Database!\n");
-                printf("May the Force... wait, wrong universe! o7\n");
-                exit(0);
-            case 8:
-                display_program_info();
-                break;
-        }
-    }
-    return 0;
-}
-
 void initialize_database(mobile_suit suits[]) {
     // RX-78-2 Gundam
     strcpy(suits[0].name, "RX-78-2 Gundam");
@@ -244,4 +193,149 @@ void display_suit_details(mobile_suit *suit) {
         printf("• %s\n", suit->weapons[i]);
     }
     printf("\n");
+}
+
+void search_suits(mobile_suit suits[], int count) {
+    char search_term[MAX_NAME_LENGTH];
+    int found = 0;
+    
+    printf("\nEnter search term (name, pilot, or faction): ");
+    clear_input_buffer();
+    fgets(search_term, sizeof(search_term), stdin);
+    search_term[strcspn(search_term, "\n")] = 0; // Remove newline
+    
+    // Convert to lowercase for case-insensitive search
+    for (int i = 0; search_term[i]; i++) {
+        search_term[i] = tolower(search_term[i]);
+    }
+    
+    printf("\n=== SEARCH RESULTS ===\n");
+    
+    for (int i = 0; i < count; i++) {
+        char temp_name[MAX_NAME_LENGTH], temp_pilot[MAX_PILOT_LENGTH], temp_faction[MAX_NAME_LENGTH];
+        
+        // Create lowercase copies for comparison
+        strcpy(temp_name, suits[i].name);
+        strcpy(temp_pilot, suits[i].pilot);
+        strcpy(temp_faction, suits[i].faction);
+        
+        for (int j = 0; temp_name[j]; j++) temp_name[j] = tolower(temp_name[j]);
+        for (int j = 0; temp_pilot[j]; j++) temp_pilot[j] = tolower(temp_pilot[j]);
+        for (int j = 0; temp_faction[j]; j++) temp_faction[j] = tolower(temp_faction[j]);
+        
+        if (strstr(temp_name, search_term) || strstr(temp_pilot, search_term) || strstr(temp_faction, search_term)) {
+            display_suit_details(&suits[i]);
+            found = 1;
+        }
+    }
+    
+    if (!found) {
+        printf("No mobile suits found matching '%s'\n", search_term);
+    }
+    
+    printf("Press Enter to continue...\n");
+    getchar();
+}
+
+void add_custom_suit(mobile_suit suits[], int *count) {
+    if (*count >= MAX_SUITS) {
+        printf("Database is full! Cannot add more suits.\n");
+        return;
+    }
+    
+    printf("\n=== ADD CUSTOM MOBILE SUIT ===\n");
+    mobile_suit *new_suit = &suits[*count];
+    
+    printf("Enter Mobile Suit name: ");
+    clear_input_buffer();
+    fgets(new_suit->name, sizeof(new_suit->name), stdin);
+    new_suit->name[strcspn(new_suit->name, "\n")] = 0;
+    
+    printf("Enter pilot name: ");
+    fgets(new_suit->pilot, sizeof(new_suit->pilot), stdin);
+    new_suit->pilot[strcspn(new_suit->pilot, "\n")] = 0;
+    
+    printf("Enter faction: ");
+    fgets(new_suit->faction, sizeof(new_suit->faction), stdin);
+    new_suit->faction[strcspn(new_suit->faction, "\n")] = 0;
+    
+    printf("Enter armor rating (1-100): ");
+    new_suit->armor = get_valid_integer(1, 100);
+    
+    printf("Enter mobility rating (1-100): ");
+    new_suit->mobility = get_valid_integer(1, 100);
+    
+    printf("Enter firepower rating (1-100): ");
+    new_suit->firepower = get_valid_integer(1, 100);
+    
+    printf("Enter energy rating (1-100): ");
+    new_suit->energy = get_valid_integer(1, 100);
+    
+    printf("How many weapons (1-%d): ", MAX_WEAPONS);
+    new_suit->weapon_count = get_valid_integer(1, MAX_WEAPONS);
+    
+    for (int i = 0; i < new_suit->weapon_count; i++) {
+        printf("Enter weapon %d: ", i + 1);
+        clear_input_buffer();
+        fgets(new_suit->weapons[i], sizeof(new_suit->weapons[i]), stdin);
+        new_suit->weapons[i][strcspn(new_suit->weapons[i], "\n")] = 0;
+    }
+    
+    new_suit->operational_status = 1;
+    (*count)++;
+    
+    printf("\nMobile Suit '%s' added successfully!\n", new_suit->name);
+    printf("Press Enter to continue...\n");
+    getchar();
+}
+
+int main() {
+    mobile_suit suits[MAX_SUITS];
+    int suit_count = 0;
+    int choice;
+    
+    printf("==================================================\n");
+    printf("    GUNDAM MOBILE SUIT DATABASE & SIMULATOR\n");
+    printf("==================================================\n");
+    printf("Welcome to the Universal Century Database!\n\n");
+    
+    // Initialize with pre-loaded Gundam data
+    initialize_database(suits);
+    suit_count = 10; // Number of pre-loaded suits
+    
+    srand(time(NULL)); // Seed for random number generation
+    
+    while (1) {
+        display_menu();
+        choice = get_valid_integer(1, 8);
+        
+        switch (choice) {
+            case 1:
+                display_all_suits(suits, suit_count);
+                break;
+            case 2:
+                search_suits(suits, suit_count);
+                break;
+            case 3:
+                add_custom_suit(suits, &suit_count);
+                break;
+            case 4:
+                battle_simulation(suits, suit_count);
+                break;
+            case 5:
+                repair_suits(suits, suit_count);
+                break;
+            case 6:
+                display_faction_stats(suits, suit_count);
+                break;
+            case 7:
+                printf("\nThanks for using the Gundam Database!\n");
+                printf("May the Force... wait, wrong universe! o7\n");
+                exit(0);
+            case 8:
+                display_program_info();
+                break;
+        }
+    }
+    return 0;
 }
