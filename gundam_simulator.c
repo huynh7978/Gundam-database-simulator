@@ -289,6 +289,207 @@ void add_custom_suit(mobile_suit suits[], int *count) {
     getchar();
 }
 
+void battle_simulation(mobile_suit suits[], int count) {
+    if (count < 2) {
+        printf("Need at least 2 mobile suits for battle!\n");
+        return;
+    }
+    
+    printf("\n=== BATTLE SIMULATION ===\n");
+    printf("Available Mobile Suits:\n");
+    
+    int operational_count = 0;
+    for (int i = 0; i < count; i++) {
+        if (suits[i].operational_status) {
+            printf("%d. %s (Pilot: %s) - Battle Power: %d\n", 
+                   i + 1, suits[i].name, suits[i].pilot, calculate_battle_power(&suits[i]));
+            operational_count++;
+        }
+    }
+    
+    if (operational_count < 2) {
+        printf("Need at least 2 operational mobile suits for battle!\n");
+        return;
+    }
+    
+    printf("\nSelect first combatant (1-%d): ", count);
+    int fighter1 = get_valid_integer(1, count) - 1;
+    
+    printf("Select second combatant (1-%d): ", count);
+    int fighter2 = get_valid_integer(1, count) - 1;
+    
+    if (fighter1 == fighter2) {
+        printf("Cannot battle the same mobile suit!\n");
+        return;
+    }
+    
+    if (!suits[fighter1].operational_status || !suits[fighter2].operational_status) {
+        printf("Both mobile suits must be operational!\n");
+        return;
+    }
+    
+    printf("\n=== BATTLE COMMENCE ===\n");
+    printf("%s (%s) VS %s (%s)\n", 
+           suits[fighter1].name, suits[fighter1].pilot,
+           suits[fighter2].name, suits[fighter2].pilot);
+    
+    int power1 = calculate_battle_power(&suits[fighter1]);
+    int power2 = calculate_battle_power(&suits[fighter2]);
+    
+    // Add some randomness to the battle
+    int random_factor1 = rand() % 21 - 10; // -10 to +10
+    int random_factor2 = rand() % 21 - 10;
+    
+    int final_power1 = power1 + random_factor1;
+    int final_power2 = power2 + random_factor2;
+    
+    printf("\nBattle Power: %s = %d (+%d bonus)\n", suits[fighter1].name, power1, random_factor1);
+    printf("Battle Power: %s = %d (+%d bonus)\n", suits[fighter2].name, power2, random_factor2);
+    
+    printf("\nBattle in progress");
+    for (int i = 0; i < 3; i++) {
+        printf(".");
+        fflush(stdout);
+        // Simple delay simulation
+        for (int j = 0; j < 100000000; j++);
+    }
+    printf("\n");
+    
+    if (final_power1 > final_power2) {
+        printf("\n🏆 VICTORY: %s wins!\n", suits[fighter1].name);
+        suits[fighter2].operational_status = 0; // Mark as destroyed
+        suits[fighter2].armor = 0;
+        suits[fighter2].energy = 0;
+        printf("💥 %s has been destroyed!\n", suits[fighter2].name);
+    } else if (final_power2 > final_power1) {
+        printf("\n🏆 VICTORY: %s wins!\n", suits[fighter2].name);
+        suits[fighter1].operational_status = 0;
+        suits[fighter1].armor = 0;
+        suits[fighter1].energy = 0;
+        printf("💥 %s has been destroyed!\n", suits[fighter1].name);
+    } else {
+        printf("\n🤝 It's a draw! Both suits are heavily damaged.\n");
+        suits[fighter1].armor /= 2;
+        suits[fighter2].armor /= 2;
+        suits[fighter1].energy /= 2;
+        suits[fighter2].energy /= 2;
+    }
+    
+    printf("\nPress Enter to continue...\n");
+    getchar();
+}
+
+void repair_suits(mobile_suit suits[], int count) {
+    printf("\n=== REPAIR FACILITY ===\n");
+    
+    int damaged_count = 0;
+    for (int i = 0; i < count; i++) {
+        if (!suits[i].operational_status || suits[i].armor < 80 || suits[i].energy < 80) {
+            printf("%d. %s - Status: %s (Armor: %d, Energy: %d)\n", 
+                   i + 1, suits[i].name, 
+                   suits[i].operational_status ? "Damaged" : "Destroyed",
+                   suits[i].armor, suits[i].energy);
+            damaged_count++;
+        }
+    }
+    
+    if (damaged_count == 0) {
+        printf("All mobile suits are in perfect condition!\n");
+        return;
+    }
+    
+    printf("\nSelect suit to repair (1-%d, 0 to repair all): ", count);
+    int choice = get_valid_integer(0, count);
+    
+    if (choice == 0) {
+        // Repair all suits
+        for (int i = 0; i < count; i++) {
+            suits[i].operational_status = 1;
+            suits[i].armor = (suits[i].armor < 80) ? 85 : suits[i].armor;
+            suits[i].energy = (suits[i].energy < 80) ? 85 : suits[i].energy;
+        }
+        printf("All mobile suits have been repaired!\n");
+    } else {
+        // Repair specific suit
+        mobile_suit *suit = &suits[choice - 1];
+        suit->operational_status = 1;
+        suit->armor = (suit->armor < 80) ? 85 : suit->armor;
+        suit->energy = (suit->energy < 80) ? 85 : suit->energy;
+        printf("%s has been repaired and is now operational!\n", suit->name);
+    }
+    
+    printf("Press Enter to continue...\n");
+    getchar();
+}
+
+void display_faction_stats(mobile_suit suits[], int count) {
+    printf("\n=== FACTION STATISTICS ===\n");
+    
+    // Count by faction
+    char factions[10][MAX_NAME_LENGTH];
+    int faction_counts[10] = {0};
+    int faction_power[10] = {0};
+    int faction_operational[10] = {0};
+    int unique_factions = 0;
+    
+    for (int i = 0; i < count; i++) {
+        int found = 0;
+        for (int j = 0; j < unique_factions; j++) {
+            if (strcmp(factions[j], suits[i].faction) == 0) {
+                faction_counts[j]++;
+                faction_power[j] += calculate_battle_power(&suits[i]);
+                if (suits[i].operational_status) faction_operational[j]++;
+                found = 1;
+                break;
+            }
+        }
+        if (!found && unique_factions < 10) {
+            strcpy(factions[unique_factions], suits[i].faction);
+            faction_counts[unique_factions] = 1;
+            faction_power[unique_factions] = calculate_battle_power(&suits[i]);
+            if (suits[i].operational_status) faction_operational[unique_factions] = 1;
+            unique_factions++;
+        }
+    }
+    
+    printf("%-20s %s %s %s\n", "Faction", "Total", "Operational", "Avg Power");
+    printf("--------------------------------------------------------\n");
+    
+    for (int i = 0; i < unique_factions; i++) {
+        int avg_power = faction_counts[i] > 0 ? faction_power[i] / faction_counts[i] : 0;
+        printf("%-20s %5d %11d %9d\n", 
+               factions[i], faction_counts[i], faction_operational[i], avg_power);
+    }
+    
+    printf("\nPress Enter to continue...\n");
+    getchar();
+}
+
+int calculate_battle_power(mobile_suit *suit) {
+    if (!suit->operational_status) return 0;
+    
+    // Weighted calculation: armor=25%, mobility=20%, firepower=35%, energy=20%
+    return (suit->armor * 25 + suit->mobility * 20 + suit->firepower * 35 + suit->energy * 20) / 100;
+}
+
+void clear_input_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+int get_valid_integer(int min, int max) {
+    int value;
+    while (1) {
+        if (scanf("%d", &value) == 1 && value >= min && value <= max) {
+            clear_input_buffer();
+            return value;
+        } else {
+            printf("Please enter a valid number between %d and %d: ", min, max);
+            clear_input_buffer();
+        }
+    }
+}
+
 int main() {
     mobile_suit suits[MAX_SUITS];
     int suit_count = 0;
