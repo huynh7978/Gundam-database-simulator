@@ -200,7 +200,6 @@ void search_suits(mobile_suit suits[], int count) {
     int found = 0;
     
     printf("\nEnter search term (name, pilot, or faction): ");
-    clear_input_buffer();
     fgets(search_term, sizeof(search_term), stdin);
     search_term[strcspn(search_term, "\n")] = 0; // Remove newline
     
@@ -247,7 +246,6 @@ void add_custom_suit(mobile_suit suits[], int *count) {
     mobile_suit *new_suit = &suits[*count];
     
     printf("Enter Mobile Suit name: ");
-    clear_input_buffer();
     fgets(new_suit->name, sizeof(new_suit->name), stdin);
     new_suit->name[strcspn(new_suit->name, "\n")] = 0;
     
@@ -276,7 +274,6 @@ void add_custom_suit(mobile_suit suits[], int *count) {
     
     for (int i = 0; i < new_suit->weapon_count; i++) {
         printf("Enter weapon %d: ", i + 1);
-        clear_input_buffer();
         fgets(new_suit->weapons[i], sizeof(new_suit->weapons[i]), stdin);
         new_suit->weapons[i][strcspn(new_suit->weapons[i], "\n")] = 0;
     }
