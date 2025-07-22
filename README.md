@@ -113,14 +113,13 @@ gundam-simulator/
 │
 ├── gundam_simulator.h      # Header file with declarations
 ├── gundam_simulator.c      # Main implementation file
-├── README.md              # This documentation
-├── LICENSE               # MIT License
-└── examples/             # Example outputs and screenshots
+├── README.md               # This documentation
+└── LICENSE                 # MIT License
 ```
 
 **Key Components**
 
-- **MobileSuit struct** - Core data structure representing each Mobile Suit  
+- **Mobile_suit struct** - Core data structure representing each Mobile Suit  
 - **Database functions** - CRUD operations for suit management  
 - **Battle system** - Combat simulation with realistic mechanics  
 - **UI functions** - User interface and input handling  
@@ -147,14 +146,6 @@ gundam-simulator/
 - String safety with proper null termination
 
 ## 🎓 Educational Value
-
-This project is ideal for:
-
-### Interview Preparation
-- Demonstrates clean, professional C coding practices
-- Shows understanding of fundamental computer science concepts
-- Provides talking points for technical discussions
-- Exhibits problem-solving and debugging skills
 
 ### Learning Objectives
 - **Data Structure Design** - Creating efficient, logical data representations
@@ -214,8 +205,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-**Project Maintainer:** [Your Name]
+**Project Maintainer:** Dennis Huynh
 
-- **GitHub:** [@yourusername](https://github.com/yourusername)
-- **Email:** your.email@example.com
-- **LinkedIn:** [Your LinkedIn Profile](https://linkedin.com/in/yourprofile)
+- **GitHub:** [@huynh7978](https://github.com/yourusername)
+- **Email:** dennishuynh79@gmail.com
+- **LinkedIn:** https://www.linkedin.com/in/dennis-huynh-78022b33b/
