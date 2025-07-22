@@ -194,3 +194,54 @@ void initialize_database(mobile_suit suits[]) {
     suits[9].weapon_count = 3;
     suits[9].operational_status = 1;
 }
+
+void display_menu() {
+    printf("\n=== MOBILE SUIT DATABASE MENU ===\n");
+    printf("1. Display All Mobile Suits\n");
+    printf("2. Search Mobile Suits\n");
+    printf("3. Add Custom Mobile Suit\n");
+    printf("4. Battle Simulation\n");
+    printf("5. Repair Damaged Suits\n");
+    printf("6. Faction Statistics\n");
+    printf("7. Exit\n");
+    printf("8. About This Program\n");
+    printf("Enter your choice (1-8): ");
+}
+
+void display_all_suits(mobile_suit suits[], int count) {
+    printf("\n=== ALL MOBILE SUITS ===\n");
+    printf("%-3s %-25s %-20s %-18s %s\n", "No.", "Mobile Suit", "Pilot", "Faction", "Status");
+    printf("------------------------------------------------------------------------\n");
+    
+    for (int i = 0; i < count; i++) {
+        printf("%-3d %-25s %-20s %-18s %s\n", 
+               i + 1, 
+               suits[i].name, 
+               suits[i].pilot, 
+               suits[i].faction,
+               suits[i].operational_status ? "Operational" : "Destroyed");
+    }
+    
+    printf("\nPress Enter to continue...\n");
+    getchar();
+}
+
+void display_suit_details(mobile_suit *suit) {
+    printf("\n=== MOBILE SUIT DETAILS ===\n");
+    printf("Name: %s\n", suit->name);
+    printf("Pilot: %s\n", suit->pilot);
+    printf("Faction: %s\n", suit->faction);
+    printf("Status: %s\n", suit->operational_status ? "Operational" : "Destroyed");
+    printf("\n--- Combat Specifications ---\n");
+    printf("Armor: %d/100\n", suit->armor);
+    printf("Mobility: %d/100\n", suit->mobility);
+    printf("Firepower: %d/100\n", suit->firepower);
+    printf("Energy: %d/100\n", suit->energy);
+    printf("Overall Battle Power: %d\n", calculate_battle_power(suit));
+    
+    printf("\n--- Weapons ---\n");
+    for (int i = 0; i < suit->weapon_count; i++) {
+        printf("• %s\n", suit->weapons[i]);
+    }
+    printf("\n");
+}
